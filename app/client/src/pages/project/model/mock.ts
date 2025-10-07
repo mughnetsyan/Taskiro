@@ -84,6 +84,18 @@ export const mockColumns: Column[] = [
         name: 'D',
         order: 3,
     },
+    {
+        id: 5,
+        projectId: 1,
+        name: 'E',
+        order: 4,
+    },
+    {
+        id: 6,
+        projectId: 1,
+        name: 'F',
+        order: 5,
+    },
 ]
 
 // export const mockData = [

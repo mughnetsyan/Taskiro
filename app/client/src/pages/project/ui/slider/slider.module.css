@@ -1,21 +1,17 @@
 .slider {
     height: 100%;
+
+    overflow: auto;
+
+    scrollbar-width: 0;
 }
 
-.sliderControlsGroup {
-    display: flex;
-    
-    justify-content: space-between;
-}
-
-.sliderViewport {
-    height: 100%;
+.slider::-webkit-scrollbar {
+    display: none;
 }
 
 .slides {
     display: flex;
 
     height: 100%;
-
-    margin-left: -12px;
 }

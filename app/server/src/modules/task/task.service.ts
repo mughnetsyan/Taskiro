@@ -3,9 +3,10 @@ import { InjectModel } from '@nestjs/sequelize';
 
 import { Task } from './task.model';
 import { CreateTaskDto } from './dto';
-import { GetTasksDto } from './dto';
+import { GetTasksByColumnId } from './dto';
 import { ToggleTaskDto } from './dto';
 import { DeleteTaskDto } from './dto/delete-task.dto';
+import { GetTasksByProjectId } from './dto/get-tasks-by-project-id';
 
 @Injectable()
 export class TaskService {
@@ -21,12 +22,27 @@ export class TaskService {
         return task
     }
 
-    async getTasksByColumnId(dto: GetTasksDto) {
+    async getTasksByColumnId(dto: GetTasksByColumnId) {
         const { columnId } = dto
 
         const tasks = await this.taskRepository.findAll({
             where: {
                 columnId
+            },
+            order: [
+                ['id', 'ASC']
+            ]
+        })
+
+        return tasks
+    }
+
+    async getTasksByProjectId(dto: GetTasksByProjectId) {
+        const { projectId } = dto
+
+        const tasks = await this.taskRepository.findAll({
+            where: {
+                projectId
             },
             order: [
                 ['id', 'ASC']

@@ -16,6 +16,51 @@
     flex-direction: column;
 
     gap: 12px;
+
+    overflow-y: auto;
+}
+
+
+.content {
+    display: flex;
+    flex-direction: column;
+
+    gap: 12px;
+    
+    overflow-y: auto;
+}
+
+
+.tasks::-webkit-scrollbar {
+  display: none;
+}
+
+.tasks::-o-scrollbar {
+  display: none;
+}
+
+.tasks::-moz-scrollbar {
+  display: none;
+}
+
+.tasks::-ms-scrollbar {
+  display: none;
+}
+
+.content::-webkit-scrollbar {
+  display: none;
+}
+
+.content::-o-scrollbar {
+  display: none;
+}
+
+.content::-moz-scrollbar {
+  display: none;
+}
+
+.content::-ms-scrollbar {
+  display: none;
 }
 
 .header {

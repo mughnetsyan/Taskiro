@@ -20,14 +20,14 @@ export class ColumnService {
             where: {
                 projectId
             },
-            include: {
-                model: Task,
-                as: 'tasks'
-            },
-            order: [
-                ['id', 'ASC'],
-                [{model: Task, as: 'tasks'}, 'id', 'ASC']
-            ]
+            // include: {
+            //     model: Task,
+            //     as: 'tasks'
+            // },
+            // order: [
+            //     ['id', 'ASC'],
+            //     [{model: Task, as: 'tasks'}, 'id', 'ASC']
+            // ]
         })
         
         return columns

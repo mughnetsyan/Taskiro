@@ -12,7 +12,6 @@ import closeImg from '../assets/cross.svg'
 
 import { createTaskFactory} from '../model'
 
-
 interface Props {
     model: ReturnType<typeof createTaskFactory>,
     columnId: number
@@ -21,6 +20,7 @@ interface Props {
 // seems to be a piece of shit, but im not sure
 // implement using keyval later
 export const CreateTask = ({model, columnId}: Props) => {
+
     const [isModalOpened, setIsModalOpened] = useState(false)
     
     const setCurrentColumnId = useUnit(model.events.currentColumnIdSet)

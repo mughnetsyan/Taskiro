@@ -12,6 +12,7 @@ import { SessionModule } from 'modules/session/session.module'
 import { TaskModule } from 'modules/task/task.module'
 import { ColumnModule } from 'modules/column/column.module'
 import { SessionMiddleware } from 'modules/session/session.middleware'
+import { DragAndDropModule } from 'modules/drag-and-drop/drag-and-drop.module'
 
 
 
@@ -45,7 +46,8 @@ import { SessionMiddleware } from 'modules/session/session.middleware'
     ProjectModule,
     SessionModule,
     TaskModule,
-    ColumnModule
+    ColumnModule,
+    DragAndDropModule
   ],
 })
 export class AppModule implements NestModule {

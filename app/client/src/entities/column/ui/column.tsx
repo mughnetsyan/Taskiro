@@ -46,8 +46,10 @@ export const Column = forwardRef<Ref, Props>(({name, className, children, delete
             </div>
 
 
-            <div className={styles.tasks}>
-                {children}
+            <div className={styles.content}>
+                <div className={styles.tasks}>
+                    {children}
+                </div>
                 {createTaskSlot}
             </div>
         </div>

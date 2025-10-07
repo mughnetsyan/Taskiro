@@ -27,16 +27,16 @@ a {
     text-decoration: none;
 }
 
-::-webkit-scrollbar {
+body::-webkit-scrollbar {
     width: 0;
 }
-::-o-scrollbar {
+body::-o-scrollbar {
     width: 0;
 }
-::-moz-scrollbar {
+body::-moz-scrollbar {
     width: 0;
 }
-::-ms-scrollbar {
+body::-ms-scrollbar {
     width: 0;
 }
 

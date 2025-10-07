@@ -1,7 +1,7 @@
-import { combine, createEvent, createStore, restore, sample, split } from "effector";
+import { combine, createEvent, createStore, sample } from "effector";
 import { applyBarrier } from "@farfetched/core";
 import { invoke } from "@withease/factories";
-import { debug, spread } from "patronum";
+import { debounce, debug, delay, spread } from "patronum";
 import { DragEndEvent, DragOverEvent, DragStartEvent } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 
@@ -36,8 +36,8 @@ export const dragStarted = createEvent<DragStartEvent>()
 export const dragEnded = createEvent<DragEndEvent>()
 export const dragging = createEvent<DragOverEvent>()
 
-export const $columns = createStore(mockColumns)
-export const $tasks = createStore(mockTasks)
+export const $columns = createStore(mockColumns.sort((a, b) => a.order - b.order))
+export const $tasks = createStore(mockTasks.sort((a, b) => a.order - b.order))
 
 export const $activeColumn = createStore<Column | null>(null)
 export const $activeTask = createStore<Task | null>(null)
@@ -78,14 +78,18 @@ sample({
 
 sample({
     clock: dragStarted,
-    filter: (event) => Boolean(event.active.data.current) && event.active.data.current?.type === 'column',
+    filter: (event) => 
+        Boolean(event.active.data.current) && 
+        event.active.data.current?.type === 'column',
     fn: (event) => event.active.data.current?.data as Column | null, 
     target: $activeColumn
 })
 
 sample({
     clock: dragStarted,
-    filter: (event) => Boolean(event.active.data.current) && event.active.data.current?.type === 'task',
+    filter: (event) => 
+        Boolean(event.active.data.current) && 
+        event.active.data.current?.type === 'task',
     fn: (event) => event.active.data.current?.data as Task | null, 
     target: $activeTask
 })
@@ -95,7 +99,10 @@ sample({
 sample({
     clock: dragEnded,
     source: $columns,
-    filter: (_, event) => Boolean(event.over) && (event.active.id !== event.over?.id) && (event.active.data.current?.type === 'column'),
+    filter: (_, event) => 
+        Boolean(event.over) && 
+        (event.active.id !== event.over?.id) && 
+        (event.active.data.current?.type === 'column'),
     fn: (columns, event) => {
         const { active, over } = event
 
@@ -119,12 +126,14 @@ sample({
 
 
 
-
 sample({
     clock: dragging,
-    source: $tasks,
+    source: {
+        tasks: $tasks,
+        columns: $columns
+    },
     filter: (_, event) => Boolean(event.over) && (event.active.id !== event.over?.id) && (event.active.data.current?.type === 'task'),
-    fn: (tasks, event) => {
+    fn: ({tasks, columns}, event) => {
         const { active, over } = event
         
         const activeTaskIndex = tasks.findIndex((task) => parseTaskId(task.id) === active.id)
@@ -139,14 +148,33 @@ sample({
                     return arrayMove(tasks, activeTaskIndex, overTaskIndex - 1)
                 }
 
-                console.log(arrayMove(tasks, activeTaskIndex, overTaskIndex).map((column, index) => ({...column, order: index})))
-
                 return arrayMove(tasks, activeTaskIndex, overTaskIndex)
             case 'column':
-                return arrayMove(tasks, activeTaskIndex, activeTaskIndex)
+                const overColumnIndex = columns.findIndex((column) => column.id === over.id)
+                const lastTaskIndex = tasks.findLastIndex((task) => task.columnId === over.id)
+
+                if(tasks[activeTaskIndex].columnId !== columns[overColumnIndex].id) {
+                    tasks[activeTaskIndex].columnId = columns[overColumnIndex].id
+                }
+                return arrayMove(tasks, activeTaskIndex, lastTaskIndex + 1)
             default:
-                return tasks
+                return arrayMove(tasks, activeTaskIndex, activeTaskIndex)
         }
     },
     target: $tasks
+})
+
+export const $isSliderActive = createStore(true)
+
+sample({
+    clock: dragStarted,
+    fn: () => false,
+    target: $isSliderActive
+})
+
+// TODO: somehow detect when transition is ended
+sample({
+    clock: delay(dragEnded, 250),
+    fn: () => true,
+    target: $isSliderActive
 })
